@@ -1,0 +1,15 @@
+I do not hold any kind of copyright for the design of the templates. I only modified the templates accordingly to suit the flask framework and made a full upscale and productive and customised website ready to launch.
+
+
+Below are website URLs from where I have taken the templates from :
+1) Main Website - https://themes.3rdwavemedia.com/demo/devblog/
+2) Contact Form - https://colorlib.com/etc/cf/ContactFrom_v1/index.html
+3) Admin Panel - https://colorlib.com/etc/lf/Login_v1/index.html
+4) Dashboard - https://colorlib.com/polygon/cooladmin/index.html
+5) Registration Form - https://colorlib.com/etc/regform/colorlib-regform-5/
+
+
+The templates are customised in Flask framework. Neither the templates nor the images are owned by me.
+
+
+My website : https://pinakipb2.blogspot.com/

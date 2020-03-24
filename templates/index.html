@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+
+    <div class="main-wrapper">
+	    <section class="cta-section theme-bg-light py-5">
+		    <div class="container text-center">
+			    <h2 class="heading">{{params['title']}}</h2>
+			    <div class="intro">{{params['tagline']}}</div>
+		    </div>
+	    </section>
+
+	    <section class="blog-list px-3 py-5 p-md-5">
+		    <div class="container">
+			{% for post in posts %}
+			    <div class="item mb-5">
+			    	{% set fname = 'images/blog/' + post.tn_img_file %}
+				    <div class="media">
+					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{ url_for('static',filename=fname) }}" alt="image">
+					    <div class="media-body">
+						    <h3 class="title mb-1"><a href="/post/{{post.slug}}">{{post.title}}</a></h3>
+						    <div class="meta mb-1"><span class="author">Posted by <a href="/about">Admin</a> on {{post.date}}</span></div>
+						    <div class="intro" align="justify">{{post.content[0:220]}}...</div>
+						    <a class="more-link" href="/post/{{post.slug}}">Read more &rarr;</a>
+					    </div><!--//media-body-->
+				    </div><!--//media-->
+				 </div><!--//item-->
+		    {% endfor %}
+
+			    <nav class="blog-nav nav nav-justified my-5">
+				  <a class="nav-link-prev nav-item nav-link rounded-left" href="{{prev}}">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				  <a class="nav-link-next nav-item nav-link rounded-right" href="{{next}}">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+				</nav>
+				
+		    </div>
+	    </section>
+	    
+{% endblock %}
+
