@@ -8,7 +8,7 @@
 		    <div class="container">
 			    <header class="blog-post-header">
 				    <h2 class="title mb-2">{{post.title}}</h2>
-				    <div class="meta mb-3"><span class="author">Posted by <a href="/about">Admin</a> on {{post.date}}</span></div>
+				    <div class="meta mb-3"><span class="author">Posted by <a href="/about">Admin</a> on {{post.date.strftime('%d %B, %Y')}}</span></div>
 			    </header>
 			    
 			    <div class="blog-post-body">

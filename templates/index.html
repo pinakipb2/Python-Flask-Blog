@@ -20,7 +20,7 @@
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{ url_for('static',filename=fname) }}" alt="image">
 					    <div class="media-body">
 						    <h3 class="title mb-1"><a href="/post/{{post.slug}}">{{post.title}}</a></h3>
-						    <div class="meta mb-1"><span class="author">Posted by <a href="/about">Admin</a> on {{post.date}}</span></div>
+						    <div class="meta mb-1"><span class="author">Posted by <a href="/about">Admin</a> on {{post.date.strftime('%d %B, %Y')}}</span></div>
 						    <div class="intro" align="justify">{{post.content[0:220]}}...</div>
 						    <a class="more-link" href="/post/{{post.slug}}">Read more &rarr;</a>
 					    </div><!--//media-body-->
