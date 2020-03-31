@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from sqlalchemy import create_engine
 from flask_mail import Mail
 import json
 import os
@@ -49,6 +50,12 @@ class Posts(db.Model):
     tn_img_file = db.Column(db.String(60), nullable=True)
 
 
+def updatesno(sno):
+    eng = create_engine(params['local_uri'])
+    with eng.connect() as con:
+        rs = con.execute(f"UPDATE posts SET sno=sno-1 WHERE sno > {sno}")
+    return "updated"
+
 @app.route("/")
 def home():
     posts = Posts.query.filter_by().all()
@@ -57,17 +64,21 @@ def home():
     if(not str(page).isnumeric()):
         page = 1
     page = int(page)
-    posts = posts[(page-1)*int(params['no_of_posts']) : (page-1)*int(params['no_of_posts'])+ int(params['no_of_posts'])]
+    if(int(params['no_of_posts'])<len(posts)) :
+        posts = posts[(page-1)*int(params['no_of_posts']) : (page-1)*int(params['no_of_posts'])+ int(params['no_of_posts'])]
 
-    if(page == 1):
+        if(page == 1):
+            prev = "#"
+            next = "/?page=" + str(page+1)
+        elif(page==last):
+            prev = "/?page=" + str(page-1)
+            next = "#"
+        else:
+            prev = "/?page=" + str(page-1)
+            next = "/?page=" + str(page+1)
+    else :
         prev = "#"
-        next = "/?page=" + str(page+1)
-    elif(page==last):
-        prev = "/?page=" + str(page-1)
         next = "#"
-    else:
-        prev = "/?page=" + str(page-1)
-        next = "/?page=" + str(page+1)
 
 
     return render_template('index.html', params=params, posts=posts, prev=prev, next=next)
@@ -89,14 +100,13 @@ def dashboard():
         posts = Posts.query.all()
         return render_template('dashboard.html', params=params,posts=posts)
 
-
-
     if request.method=='POST':
         username = request.form.get('uname')
         userpass = request.form.get('pass')
         if(username == params['admin_user'] and userpass == params['admin_password']):
             session['user'] = username
             posts = Posts.query.all()
+            flash('You are now logged in!','success')
             return render_template('dashboard.html', params=params,posts=posts)
 
     return render_template('login.html', params=params)
@@ -116,6 +126,7 @@ def edit(sno):
                 post = Posts(title=box_title, slug=slug, content=content, img_file=img_file, tn_img_file=tn_img_file, date=date)
                 db.session.add(post)
                 db.session.commit()
+                flash('Your post has been successfully added!','success')
             else:
                 post = Posts.query.filter_by(sno=sno).first()
                 post.title = box_title
@@ -125,6 +136,7 @@ def edit(sno):
                 post.tn_img_file = tn_img_file
                 post.date = date
                 db.session.commit()
+                flash('Your post has been successfully edited!','success')
                 return redirect('/edit/'+sno)
         post = Posts.query.filter_by(sno=sno).first()
         return render_template('edit.html', params=params, post=post, sno=sno)
@@ -135,8 +147,10 @@ def uploader():
     if ('user' in session and session['user'] == params['admin_user']):
         if (request.method == 'POST'):
             f = request.files['file1']
+            posts = Posts.query.all()
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-            return "Uploaded Successfully"
+            flash('Uploaded Successfully!','success')
+            return render_template('dashboard.html',params=params,posts=posts)
 
 @app.route("/logout")
 def logout():
@@ -149,8 +163,9 @@ def delete(sno):
         post = Posts.query.filter_by(sno=sno).first()
         db.session.delete(post)
         db.session.commit()
+        updatesno(sno)
+        flash('Post has been deleted successfully!','success')
     return redirect('/dashboard')
-
 
 @app.route("/contact", methods = ['GET', 'POST'])
 def contact():
