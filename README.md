@@ -1,2 +1,2 @@
 # Python-Flask-Blog
-This Blog is created to combine different templates using Python framework Flask
+This Blog is created by combining different templates in Python using Flask
